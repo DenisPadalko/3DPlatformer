@@ -5,29 +5,34 @@
 #include "CoreMinimal.h"
 #include "Components/SplineComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/TimelineComponent.h"
 #include "Engine/EngineTypes.h"
 #include "ActorMoverAlongSplineComponent.generated.h"
 
 /**
  * 
  */
-UCLASS()
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PT2TASK5_API UActorMoverAlongSplineComponent : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 public:
-	virtual void BeginPlay() override;
+	UActorMoverAlongSplineComponent();
 	
-	void TimerFunction();
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable, Category="Default")
+	void SetSpline(USplineComponent* InSpline);
+
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 public:
-	UPROPERTY(BlueprintReadWrite, Category="Defualt")
+	UPROPERTY(BlueprintReadWrite, Category="Default")
 	USplineComponent* Spline;
 
 	UPROPERTY(EditAnywhere, Category="Default")
 	float StartAtProgress;
 
 	UPROPERTY(VisibleAnywhere, Category="Default")
-	FTimerHandle TimerHandle;
+	float Timer;
 	
-	FTimerDynamicDelegate TimerDynamicDelegate;
 };

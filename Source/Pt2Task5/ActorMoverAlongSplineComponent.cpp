@@ -3,22 +3,42 @@
 
 #include "ActorMoverAlongSplineComponent.h"
 
-void UActorMoverAlongSplineComponent::BeginPlay()
+UActorMoverAlongSplineComponent::UActorMoverAlongSplineComponent()
 {
-	TimerDynamicDelegate.BindDynamic(this, &UActorMoverAlongSplineComponent::TimerFunction);
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDynamicDelegate, 1.0f, true, 0.0f);
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 
-void UActorMoverAlongSplineComponent::TimerFunction()
+void UActorMoverAlongSplineComponent::BeginPlay()
 {
-	if(TimerHandle.ToString() >= Spline->Duration())
+	Super::BeginPlay();
+	
+	Timer = 0.0f;
+	this->SetWorldLocation(Spline->GetLocationAtDistanceAlongSpline(Spline->GetSplineLength() * StartAtProgress, ESplineCoordinateSpace::World));
+}
+
+void UActorMoverAlongSplineComponent::SetSpline(USplineComponent* InSpline)
+{
+	Spline = InSpline;
+}
+
+void UActorMoverAlongSplineComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
+	Timer += DeltaTime;
+	if(Timer >= Spline->Duration)
 	{
-		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDynamicDelegate, 1.0f, true, 0.0f);
+		Timer -= Spline->Duration;
 	}
-	const float TimeElapsed = GetWorld()->GetTimerManager().GetTimerElapsed(TimerHandle) + 1.0f;
-	const FVector NewLocation = Spline->GetLocationAtTime(TimeElapsed, ESplineCoordinateSpace::World, true);
-	const FRotator NewRotation = Spline->GetRotationAtTime(TimeElapsed, ESplineCoordinateSpace::World, true);
-	MoveComponent(NewLocation, NewRotation, false);
+	
+	float TimeToGetLocationAt = Timer + (Spline->Duration * StartAtProgress);
+	if(TimeToGetLocationAt >= Spline->Duration)
+	{
+		TimeToGetLocationAt -= Spline->Duration;
+	}
+	
+	const FVector NewLocation = Spline->GetLocationAtTime(TimeToGetLocationAt, ESplineCoordinateSpace::World);
+
+	this->SetWorldLocation(NewLocation);
 }
