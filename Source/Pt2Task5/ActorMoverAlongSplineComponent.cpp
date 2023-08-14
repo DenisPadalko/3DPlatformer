@@ -14,7 +14,7 @@ void UActorMoverAlongSplineComponent::BeginPlay()
 	Super::BeginPlay();
 	
 	Timer = StartAtProgress * Spline->Duration;
-	SetWorldLocation(Spline->GetLocationAtDistanceAlongSpline(Spline->GetSplineLength() * StartAtProgress, ESplineCoordinateSpace::World));
+	SetWorldLocation(Spline->GetLocationAtTime(Timer, ESplineCoordinateSpace::World));
 }
 
 void UActorMoverAlongSplineComponent::SetSpline(USplineComponent* InSpline)

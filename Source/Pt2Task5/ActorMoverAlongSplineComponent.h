@@ -27,7 +27,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 public:
 	UPROPERTY(BlueprintReadWrite, Category="Default")
-	USplineComponent* Spline;
+	USplineComponent* Spline = nullptr;
 
 	UPROPERTY(EditAnywhere, Category="Default")
 	float StartAtProgress = 0.0f;
