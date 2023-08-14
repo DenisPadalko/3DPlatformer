@@ -30,9 +30,9 @@ public:
 	USplineComponent* Spline;
 
 	UPROPERTY(EditAnywhere, Category="Default")
-	float StartAtProgress;
+	float StartAtProgress = 0.0f;
 
 	UPROPERTY(VisibleAnywhere, Category="Default")
-	float Timer;
+	float Timer = 0.0f;
 	
 };

@@ -13,8 +13,8 @@ void UActorMoverAlongSplineComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	Timer = 0.0f;
-	this->SetWorldLocation(Spline->GetLocationAtDistanceAlongSpline(Spline->GetSplineLength() * StartAtProgress, ESplineCoordinateSpace::World));
+	Timer = StartAtProgress * Spline->Duration;
+	SetWorldLocation(Spline->GetLocationAtDistanceAlongSpline(Spline->GetSplineLength() * StartAtProgress, ESplineCoordinateSpace::World));
 }
 
 void UActorMoverAlongSplineComponent::SetSpline(USplineComponent* InSpline)
@@ -29,16 +29,10 @@ void UActorMoverAlongSplineComponent::TickComponent(float DeltaTime, ELevelTick 
 	Timer += DeltaTime;
 	if(Timer >= Spline->Duration)
 	{
-		Timer -= Spline->Duration;
+		Timer = 0.0f;
 	}
 	
-	float TimeToGetLocationAt = Timer + (Spline->Duration * StartAtProgress);
-	if(TimeToGetLocationAt >= Spline->Duration)
-	{
-		TimeToGetLocationAt -= Spline->Duration;
-	}
-	
-	const FVector NewLocation = Spline->GetLocationAtTime(TimeToGetLocationAt, ESplineCoordinateSpace::World);
+	const FVector NewLocation = Spline->GetLocationAtTime(Timer, ESplineCoordinateSpace::World);
 
-	this->SetWorldLocation(NewLocation);
+	SetWorldLocation(NewLocation);
 }
