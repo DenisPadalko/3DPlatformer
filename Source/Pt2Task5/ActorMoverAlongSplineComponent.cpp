@@ -9,10 +9,8 @@ UActorMoverAlongSplineComponent::UActorMoverAlongSplineComponent()
 }
 
 
-void UActorMoverAlongSplineComponent::BeginPlay()
+void UActorMoverAlongSplineComponent::UpdateMeshStartLocation()
 {
-	Super::BeginPlay();
-	
 	Timer = StartAtProgress * Spline->Duration;
 	SetWorldLocation(Spline->GetLocationAtTime(Timer, ESplineCoordinateSpace::World));
 }

@@ -18,11 +18,12 @@ class PT2TASK5_API UActorMoverAlongSplineComponent : public UStaticMeshComponent
 	GENERATED_BODY()
 public:
 	UActorMoverAlongSplineComponent();
-	
-	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category="Default")
 	void SetSpline(USplineComponent* InSpline);
+
+	UFUNCTION(BlueprintCallable, Category="Default")
+	void UpdateMeshStartLocation();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 public:
